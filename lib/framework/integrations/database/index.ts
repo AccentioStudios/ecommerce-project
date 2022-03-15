@@ -1,10 +1,7 @@
-import mongoose = require("mongoose");
-
-export default mongoose
-  .connect(process.env.MONGOURL || '')
-  .then(() => {
-    console.log("Db Connected");
-  })
-  .catch((error: any) => {
-    console.error(error);
-  });
+import { connect } from 'mongoose';
+export class Database {
+  async init(): Promise<void> {
+    await connect(process.env.MONGOURL || '');
+    console.log("📁 - DB Connected");
+  }
+}
