@@ -1,9 +1,9 @@
 import express = require('express');
+export type ExpressRouter = express.Router;
 export type expressRequestAndResponseType =
     (req: express.Request, res: express.Response) => void;
 export type expressMiddlewareRequestAndResponseType =
     (req: express.Request, res: express.Response, next: express.NextFunction) => void;
-
 // Controller Class
 
 export abstract class Controller {
@@ -21,7 +21,30 @@ export type RouterSettings = {
     routes: Route[],
 };
 export abstract class Router {
-    settings!: RouterSettings
+    settings: RouterSettings | null = null;
+
+    toExpressRouter(): Promise<ExpressRouter | null> {
+        return new Promise(async (resolve) => {
+            if (this.settings != null) {
+                var expressRouter: ExpressRouter = express.Router();
+                await this.settings.routes.forEach(async (route) => {
+                    let baseRouterUrl = `/${route.path}/${route.version}`;
+                    await Object.keys(route.handle.getMethods).forEach((key, index) => {
+                        const getMethod: expressRequestAndResponseType = route.handle.getMethods[index];
+                        const endpointName: string = `${baseRouterUrl}/${getMethod.name}`;
+                        expressRouter.get(endpointName, (req, res) => getMethod(req, res));
+                    });
+                    await Object.keys(route.handle.postMethods).forEach((key, index) => {
+                        const postMethod = route.handle.postMethods[index];
+                        const endpointName: string = `${baseRouterUrl}/${postMethod.name}`;
+                        expressRouter.post(endpointName, (req, res) => postMethod(req, res));
+                    });
+                });
+                return resolve(expressRouter);
+            }
+            return resolve(null);
+        });
+    }
 }
 
 export abstract class Route {
@@ -34,6 +57,7 @@ export abstract class Route {
         this.version = version;
         this.handle = handle
     }
+
 }
 
 // Middleware Class

@@ -1,5 +1,5 @@
 import express = require('express');
-import { Middleware } from '../classes';
+import { ExpressRouter, Middleware } from '../classes';
 import { getFilesFolder } from '../utils/getFilesFolder';
 import path = require('path');
 
@@ -13,7 +13,9 @@ export class ExpressApp {
     return new Promise((resolve, reject) => {
       this.app.set('maintenance', true);
       this.app.listen(process.env.PORT || 5000, () => {
-        console.log(`💻 - Running in port ${process.env.PORT || 5000}`);
+        console.log(`💻 - Starting Server: port ${process.env.PORT || 5000}`);
+        console.log();
+        console.log(`💻 - Starting as maintenance mode`);
         console.log();
       });
       resolve(this.app);
@@ -35,6 +37,17 @@ export class ExpressApp {
           }
         }
       });
+      resolve();
+    });
+  }
+
+  registerRouter(expressRouter: ExpressRouter | null): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      if (expressRouter) {
+        console.log('📪 - Registering Routes...');
+        console.log();
+        this.app.use(expressRouter);
+      }
       resolve();
     });
   }
