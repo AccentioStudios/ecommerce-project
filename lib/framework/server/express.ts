@@ -2,7 +2,8 @@ import express = require('express');
 import { ExpressRouter, Middleware } from '../classes';
 import { getFilesFolder } from '../utils/getFilesFolder';
 import path = require('path');
-
+import helmet from 'helmet';
+import bodyParser = require('body-parser');
 export class ExpressApp {
   private app: express.Express;
   constructor() {
@@ -12,6 +13,8 @@ export class ExpressApp {
   init(): Promise<express.Express> {
     return new Promise((resolve, reject) => {
       this.maintenanceMode();
+      this.app.use(helmet());
+      this.app.use(bodyParser.json());
       this.app.listen(process.env.PORT || 5000, () => {
         console.log(`💻 - Starting Server: port ${process.env.PORT || 5000}`);
         console.log();
