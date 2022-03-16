@@ -1,7 +1,7 @@
 import { Controller, expressRequestAndResponseType } from "../../../framework/classes";
 import UserEntity, { userEntityToDto } from "../models/user.model";
 
-class HelloWorldController implements Controller {
+class UserController implements Controller {
     getMethods: expressRequestAndResponseType[] = [
         function world(req, res) {
             res.send('hello world');
@@ -16,4 +16,4 @@ class HelloWorldController implements Controller {
 
 }
 
-export default new HelloWorldController;
+export default new UserController;

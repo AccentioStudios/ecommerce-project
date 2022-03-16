@@ -16,6 +16,16 @@ interface UserDto {
     isAdmin: boolean;
 }
 
+export function userEntityToDto(user: UserEntity | null): UserDto | null {
+    if (user) {
+        return {
+            name: user.name,
+            email: user.email
+        } as UserDto
+    }
+    return null;
+}
+
 const schema = new Schema<UserEntity>({
     username: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -26,14 +36,5 @@ const schema = new Schema<UserEntity>({
 
 const UserEntity: Model<UserEntity> = model<UserEntity>('User', schema);
 
-export function userEntityToDto(user: UserEntity | null): UserDto | null {
-    if (user) {
-        return {
-            name: user.name,
-            email: user.email
-        } as UserDto
-    }
-    return null;
-}
 
 export default UserEntity;

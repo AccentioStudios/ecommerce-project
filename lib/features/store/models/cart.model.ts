@@ -1,5 +1,4 @@
 import { Schema, model, Model, Types } from 'mongoose';
-import ProductEntity from './product.model';
 
 interface CartEntity {
     userId: string;
@@ -9,6 +8,16 @@ interface CartEntity {
 interface CartDto {
     userId: string;
     products: Types.Array<any>;
+}
+
+export function cartEntityToDto(user: CartEntity | null): CartDto | null {
+    if (user) {
+        return {
+            userId: user.userId,
+            products: user.products
+        } as CartDto
+    }
+    return null;
 }
 
 const schema = new Schema<CartEntity>({
@@ -21,16 +30,7 @@ const schema = new Schema<CartEntity>({
     ],
 }, { timestamps: true });
 
-const CartEntity: Model<CartEntity> = model<CartEntity>('User', schema);
+const CartEntity: Model<CartEntity> = model<CartEntity>('Cart', schema);
 
-export function cartEntityToDto(user: CartEntity | null): CartDto | null {
-    if (user) {
-        return {
-            userId: user.userId,
-            products: user.products
-        } as CartDto
-    }
-    return null;
-}
 
 export default CartEntity;

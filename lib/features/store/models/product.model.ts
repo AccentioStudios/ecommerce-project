@@ -30,7 +30,7 @@ const schema = new Schema<ProductEntity>({
     price: { type: Number, required: true }
 }, { timestamps: true });
 
-const ProductEntity: Model<ProductEntity> = model<ProductEntity>('User', schema);
+const ProductEntity: Model<ProductEntity> = model<ProductEntity>('Product', schema);
 
 export function productEntityToDto(user: ProductEntity | null): ProductDto | null {
     if (user) {
