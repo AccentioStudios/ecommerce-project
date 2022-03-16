@@ -11,14 +11,14 @@ export class ExpressApp {
 
   init(): Promise<express.Express> {
     return new Promise((resolve, reject) => {
-      this.app.set('maintenance', true);
+      this.maintenanceMode();
       this.app.listen(process.env.PORT || 5000, () => {
         console.log(`💻 - Starting Server: port ${process.env.PORT || 5000}`);
         console.log();
         console.log(`💻 - Starting as maintenance mode`);
         console.log();
+        resolve(this.app);
       });
-      resolve(this.app);
     });
   }
 
@@ -50,6 +50,10 @@ export class ExpressApp {
       }
       resolve();
     });
+  }
+
+  maintenanceMode(active: boolean = true) {
+    this.app.set('maintenance', active);
   }
 }
 
